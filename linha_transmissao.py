@@ -9,6 +9,16 @@ mp.pretty = True
 
 class Linha_transmissao:
     def __init__(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+        #r_int: raio interno do condutor de fase
+        #r_ext: raio externo do condutor de fase
+        #nfase: numero de condutores de fase
+        #npr: numero de para-raios
+        #xc: posicoes x dos centros de todos os condutores (fase e para-raio)
+        #yc: posicoes x dos centros de todos os condutores (fase e para-raio)
+        #rhoc: rho do condutor de fase
+        #rhoc_pr: rho do para-raio
+        #rf: raio externo do condutor de fase
+        
         self.f = 60
         self.omega = 2*pi*self.f
         self.epsilon_r = 10 

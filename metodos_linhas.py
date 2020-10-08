@@ -4,9 +4,6 @@ def raio_eq(n, rext, R):
     return re
 
 # potencia caracteristica
-
-#aaalorenzo
-
 def Pnat(Vs, Vr, Ir):
     Zc = Vr/Ir
     Pnat = (Vs**2)/Zc.real

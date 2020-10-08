@@ -5,10 +5,6 @@ def raio_eq(n, rext, R):
 
 # potencia caracteristica
 
-git add
-git commit
-git push
-
 #aaalorenzo
 
 def Pnat(Vs, Vr, Ir):

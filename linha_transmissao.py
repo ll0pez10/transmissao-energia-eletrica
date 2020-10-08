@@ -8,11 +8,11 @@ mp.pretty = True
 
 
 class Linha_transmissao:
-    def __init__(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+    def __init__(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
         self.f = 60
         self.omega = 2*pi*self.f
-        self.epsilon_r = epsilon_r
-        self.sigma_s = sigma_s
+        self.epsilon_r = 10 
+        self.sigma_s = 1*10**(-3)
         self.r_int = r_int
         self.r_ext = r_ext
         self.nfase = nfase

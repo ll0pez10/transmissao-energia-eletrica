@@ -147,7 +147,7 @@ for i in CondutoresPos:
                 Zabc[i][j]=z1[i][j]-(z1[i][3]*z1[3][j]/z1[3][3])
                 Yabc[i][j]=y1[i][j]-(y1[i][3]*y1[3][j]/y1[3][3])
     elif (Linha.npr==2):
-        #desenvolver
+        #desenvolver. Se pa botamos dentro do outro, pq para a redução de 2 pararaios temos que primeiro reduzir o primeiro de qualquer forma.
 
     #matrizes de sequencia
     a = complex(-0.5,0.866025)

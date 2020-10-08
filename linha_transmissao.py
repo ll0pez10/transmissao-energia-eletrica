@@ -126,12 +126,14 @@ class Linha_transmissao:
                     zin[i, j] = self.Zint(self.omega, self.rhoc_pr, self.rpr)
         return zin
 
-    def impedancia(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+    def impedancia(self):
+        #Calcula a matriz de impedancia
         Z = self.Zin(self.xc, self.npr, self.rhoc, self.rhoc_pr, self.rf, self.ri) + (((1j*omega*mu_0)/2/pi)
                                                                                       * (self.Mpot(self.xc, self.yc, self.npr, self.rf, self.rpr) + self.S1(self.xc, self.npr, self.yc, self.rf, self.rpr)))
         return Z
 
-    def admitancia(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
-        Y =  1j*omega*2*math.pi*epsilon_0*(np.linalg.inv(Mpot(xc,yc,npr,rf,rpr))) + 3.0*10**(-11)*np.eye(ncond)
+    def admitancia(self):
+        #Calcula a matriz de admitancia
+        Y =  1j*omega*2*math.pi*epsilon_0*(np.linalg.inv(Mpot(self.xc,self.yc,self.npr,self.rf,self.rpr))) + 3.0*10**(-11)*np.eye(ncond)
         return Y
 

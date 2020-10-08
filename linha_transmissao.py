@@ -1,4 +1,4 @@
-from numpy import exp, abs, angle, conj, sqrt
+from numpy import exp, abs, angle, conj
 import numpy as np
 from scipy.constants import mu_0, epsilon_0
 from scipy.special import k1, k0, i1, i0
@@ -33,11 +33,12 @@ class Linha_transmissao:
         self.rhoc_pr = rhoc_pr
         self.rf = rf
         self.rpr = rpr
-        self.ri = rint + 10**(-6)
-        self.gama_S = np.sqrt(
-            1j*omega*mu_0*(sigma_s + 1j*omega*epsilon_r*epsilon_0))
-        self.gama_ar = 1j*omega*np.sqrt(mu_0*epsilon_0)
-        self.eta = np.sqrt(gama_S**2 - gama_ar**2)
+        self.ri = r_int + 10**(-6)
+        #sqrt so funciona se for do modulo mpmath, se usar o do numpy nao funciona
+        self.gama_S = sqrt(1j*self.omega*mu_0*(self.sigma_s + 1j*self.omega*self.epsilon_r*epsilon_0))
+        self.gama_ar = 1j*self.omega*np.sqrt(mu_0*epsilon_0)
+        #sqrt so funciona se for do modulo mpmath
+        self.eta = sqrt(self.gama_S**2 - self.gama_ar**2)
 
     # Calcula a matriz de impedancia de retorno do solo
 
@@ -130,7 +131,7 @@ class Linha_transmissao:
                                                                                       * (self.Mpot(self.xc, self.yc, self.npr, self.rf, self.rpr) + self.S1(self.xc, self.npr, self.yc, self.rf, self.rpr)))
         return Z
 
-    def impedanciaY(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+    def admitancia(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
         Y =  1j*omega*2*math.pi*epsilon_0*(np.linalg.inv(Mpot(xc,yc,npr,rf,rpr))) + 3.0*10**(-11)*np.eye(ncond)
         return Y
 

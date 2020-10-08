@@ -2,7 +2,7 @@ from linha_transmissao import Linha_transmissao
 from metodos_linhas import raio_eq, Pnat
 from numpy import sqrt
 import numpy as np
-
+#testing
 
 
 
@@ -138,17 +138,18 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq
 for i in CondutoresPos:
     print("Linha: " + i)
     Linha = Linha_transmissao(CondutoresPos[i][0], 0, 3, 1, CondutoresPos[i][2], CondutoresPos[i][3], CondutoresEspecs[i][2], CondutoresEspecs["3/8 EHS"][2], CondutoresPos["Bluejay"][1], CondutoresEspecs["3/8 EHS"][1])
-    Z=Linha.impedancia
-    #Y=Linha.impedanciaY
+    Z = Linha.impedancia()
+    Y = Linha.admitancia()
     #Retiramos as info do pararaio das matrizes atraves da reducao de kron
     Zabc = 0j + np.zeros((3,3))
     Yabc = 0j + np.zeros((3,3))
     if (Linha.npr==1):
         for i in range(3):
             for j in range(3):
-                Zabc[i][j]=z1[i][j]-(z1[i][3]*z1[3][j]/z1[3][3])
-                Yabc[i][j]=y1[i][j]-(y1[i][3]*y1[3][j]/y1[3][3])
+                Zabc[i][j]=Z[i][j]-(Z[i][3]*Z[3][j]/Z[3][3])
+                Yabc[i][j]=Y[i][j]-(Y[i][3]*Y[3][j]/Y[3][3])
     elif (Linha.npr==2):
+        pass
         #desenvolver. Se pa botamos dentro do outro, pq para a redução de 2 pararaios temos que primeiro reduzir o primeiro de qualquer forma.
 
     #matrizes de sequencia
@@ -157,5 +158,5 @@ for i in CondutoresPos:
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
     z012 = np.linalg.inv(A)@Zabc@A
     y012 = np.linalg.inv(A)@Yabc@A
-    print("Impedancia Z+ = " + str(z012))
-    print("Impedancia Y+ = " + str(y012))
+    #print("Impedancia Z+ = " + str(z012))
+    #print("Impedancia Y+ = " + str(y012))

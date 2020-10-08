@@ -1,5 +1,4 @@
 # função para calcular o raio equivalente
-#testando
 def raio_eq(n, rext, R):
     re = (rext*n*(R**(n-1)))**(n)
     return re

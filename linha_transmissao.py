@@ -20,7 +20,7 @@ class Linha_transmissao:
         #rf: raio externo do condutor de fase
         
         self.f = 60
-        self.omega = 2*pi*self.f
+        self.omega = 2*np.pi*self.f
         self.epsilon_r = 10 
         self.sigma_s = 1*10**(-3)
         self.r_int = r_int
@@ -39,6 +39,7 @@ class Linha_transmissao:
         self.gama_ar = 1j*self.omega*np.sqrt(mu_0*epsilon_0)
         #sqrt so funciona se for do modulo mpmath
         self.eta = sqrt(self.gama_S**2 - self.gama_ar**2)
+        self.ncond = len(self.xc)
 
     # Calcula a matriz de impedancia de retorno do solo
 
@@ -93,22 +94,22 @@ class Linha_transmissao:
                         (2*pi)*log((2*(self.yc[i]+p))/self.rpr)
         return zout
 
-    def Zint(self, omega, rhoc, rf):
+    def Zint(self):
         # Calcula a impedancia interna de um condutor cilindrico
-        etac = sqrt((1j*self.omega*mu_0)/self.rhoc)
-        zint = rhoc*(etac/(2*pi*self.rf)) * \
-            (i0(etac*self.rf)/i1(etac*self.rf))
+        etac = np.sqrt((1j*self.omega*mu_0)/self.rhoc)
+        zint = self.rhoc*(etac/(2*pi*self.rf)) * \
+            (i0(abs(etac)*self.rf)/i1(abs(etac)*self.rf))
         return zint
 
-    def Zinttub(self, omega, rhoc, rf, ri):
+    def Zinttub(self):
         # Calcula a impedancia interna de um condutor tubular
-        etac = sqrt((1j*omega*mu_0)/self.rhoc)
-        num = i0(etac*self.rf)*k1(etac*self.ri) + \
-            k0(etac*self.rf)*i1(etac*self.ri)
-        den = i1(etac*self.rf)*k1(etac*self.ri) - \
-            i1(etac*self.ri)*k1(etac*self.rf)
+        etac = np.sqrt((1j*self.omega*mu_0)/self.rhoc)
+        num = i0(abs(etac*self.rf))*k1(abs(etac*self.ri)) + \
+            k0(abs(etac*self.rf))*i1(abs(etac*self.ri))
+        den = i1(abs(etac*self.rf))*k1(abs(etac*self.ri)) - \
+            i1(abs(etac*self.ri))*k1(abs(etac*self.rf))
         zin = self.rhoc*(etac/(2*pi*self.rf))*(num/den)
-        return zint
+        return zin
 
     def Zin(self, xc, npr, rhoc, rhoc_pr, rf, ri):
         ncond = len(self.xc)
@@ -120,20 +121,19 @@ class Linha_transmissao:
                 if i != j:  # entre fases
                     zin[i, j] = 0
                 elif (i+1) <= (ncond-self.npr):  # cabos de fase
-                    zin[i, j] = self.Zinttub(
-                        self, omega, self.rhoc, self.rf, self.ri)
+                    zin[i, j] = self.Zinttub()
                 else:  # pararaio
-                    zin[i, j] = self.Zint(self.omega, self.rhoc_pr, self.rpr)
+                    zin[i, j] = self.Zint()
         return zin
 
     def impedancia(self):
         #Calcula a matriz de impedancia
-        Z = self.Zin(self.xc, self.npr, self.rhoc, self.rhoc_pr, self.rf, self.ri) + (((1j*omega*mu_0)/2/pi)
+        Z = self.Zin(self.xc, self.npr, self.rhoc, self.rhoc_pr, self.rf, self.ri) + (((1j*self.omega*mu_0)/2/pi)
                                                                                       * (self.Mpot(self.xc, self.yc, self.npr, self.rf, self.rpr) + self.S1(self.xc, self.npr, self.yc, self.rf, self.rpr)))
         return Z
 
     def admitancia(self):
         #Calcula a matriz de admitancia
-        Y =  1j*omega*2*math.pi*epsilon_0*(np.linalg.inv(Mpot(self.xc,self.yc,self.npr,self.rf,self.rpr))) + 3.0*10**(-11)*np.eye(ncond)
+        Y =  1j*self.omega*2*np.pi*epsilon_0*(np.linalg.inv(self.Mpot(self.xc,self.yc,self.npr,self.rf,self.rpr))) + 3.0*10**(-11)*np.eye(self.ncond)
         return Y
 

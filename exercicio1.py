@@ -3,6 +3,7 @@ from metodos_linhas import raio_eq, Pnat
 
 
 
+
 # Dados dos condutores de fase
 # Name: (r0,r1,pfase) ohms/m
 CondutoresEspecs = {"Bluejay": (8.702*10**-3, 15.977*10**-3, 29.544*10**-9),
@@ -20,8 +21,9 @@ CondutoresEspecs = {"Bluejay": (8.702*10**-3, 15.977*10**-3, 29.544*10**-9),
 # n é o numero de condutores por fase
 # Xc cordenadas dos centros dos 4 condutores
 # Yc cordenadas dos centros dos 4 condutores PS: na formula subtrai por 2/3 da flecha
+#Pros dois primeiros botei o raio como sendo o db*sqrt(2)/2
 CondutoresPos = {"Bluejay": (raio_eq(4, CondutoresEspecs["Bluejay"][1], .475*sqrt(2)/2),raio_eq(4, CondutoresEspecs["Bluejay"][0], .475*sqrt(2)/2) ,(-15.85, 0, 15.85), (35.9-2*20.9/3, 35.9-2*20.9/3, 35.9-2*20.9/3), (-14.45, 45.9-2*14.7/3, 14.45, 45.9-2*14.7/3), 4),
-                 "Rail Normal": (raio_eq(4, CondutoresEspecs["Rail"][1]), raio_eq(4, CondutoresEspecs["Rail"][0]), (-15, -11, -6, 6, 11, 15), (23.2, 33.2, 23.2, 23.2, 33.2, 23.2), (-8.8, 42.7, 8.8, 42.7), 4),
+                 "Rail Normal": (raio_eq(4, CondutoresEspecs["Rail"][1],.475*sqrt(2)/2), raio_eq(4, CondutoresEspecs["Rail"][0],.475*sqrt(2)/2), (-15, -11, -6, 6, 11, 15), (23.2, 33.2, 23.2, 23.2, 33.2, 23.2), (-8.8, 42.7, 8.8, 42.7), 4)
                  }
 
 # ============ 500kV rail convencional ===============
@@ -69,7 +71,13 @@ xy2c = (((-4.271 + -4.729)/2, (10.771+11.229)/2),
         ((4.271 + 4.729)/2, (11.229 + 10.771)/2),
         (-3.500, 26.000), (3.500, 26.000))
 
-R2 = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)
+Rext = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)/2
+Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
+
+CondutoresPos["Rail Compacto"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
+                                 (xy2c[0][0], xy2c[1][0], xy2c[2][0]),
+                                      (xy2c[0][1], xy2c[1][1], xy2c[2][1]),
+                                      (xy2c[3][0], xy2c[3][1], xy2c[4][0], xy2c[4][1]), 4)
 
 # =============== 500kV rail recapacitado =====================
 #2 ultimos elementos sao pararraio, da forma (x, y)
@@ -89,7 +97,14 @@ xy3c = (((-7.229 + -6.771)/2, (8.639 + 10.500)/2),
         (((6.771 + 7.229)/2, (8.639 + 10.500)/2)),
         (-5.000, 20.500), (5.000, 20.500))
 
-R3 = sqrt((xy3c[0][0] - xy3[0][0])**2 + (xy3c[0][1] - xy3[0][1])**2)
+Rext = sqrt((xy3c[0][0] - xy3[0][0])**2 + (xy3c[0][1] - xy3[0][1])**2)/2
+Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
+
+
+CondutoresPos["Rail Recapacitado"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
+                                     (xy3c[0][0], xy3c[1][0], xy3c[2][0]),
+                                      (xy3c[0][1], xy3c[1][1], xy3c[2][1]),
+                                      (xy3c[3][0], xy3c[3][1], xy3c[4][0], xy3c[4][1]), 4)
 
 # =================== 345kv ruddy ==========================
 #2 ultimos elementos sao pararraio, da forma (x, y)
@@ -105,12 +120,12 @@ xy1c = (((-7.229 + -6.771)/2, 10.5),
         ((7.229 + 6.771)/2, 10.5),
         (-5.000, 20.500), (5.000, 20.500))
 
-R1 = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)
 
+Rext = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)/2
+Rint = Rext*CondutoresEspecs["Ruddy"][0]/CondutoresEspecs["Ruddy"][1]
 
-
-#==============================================================================
-#================================= Execucao ===================================
-#==============================================================================
-
+CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq(2, CondutoresEspecs["Ruddy"][1], Rint),
+                                     (xy1c[0][0], xy1c[1][0], xy1c[2][0]),
+                                      (xy1c[0][1], xy1c[1][1], xy1c[2][1]),
+                                      (xy1c[3][0], xy1c[3][1], xy1c[4][0], xy1c[4][1]), 4)
 

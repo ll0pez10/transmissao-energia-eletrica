@@ -129,3 +129,7 @@ class Linha_transmissao:
         Z = self.Zin(self.xc, self.npr, self.rhoc, self.rhoc_pr, self.rf, self.ri) + (((1j*omega*mu_0)/2/pi)
                                                                                       * (self.Mpot(self.xc, self.yc, self.npr, self.rf, self.rpr) + self.S1(self.xc, self.npr, self.yc, self.rf, self.rpr)))
     return Z
+
+    def impedanciaY(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+        Y =  1j*omega*2*math.pi*epsilon_0*(np.linalg.inv(Mpot(xc,yc,npr,rf,rpr))) + 3.0*10**(-11)*np.eye(ncond)
+        return Y

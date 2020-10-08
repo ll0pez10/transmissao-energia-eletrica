@@ -55,7 +55,7 @@ class Linha_transmissao:
                 else:
                     s1[i, j] = log(
                         (1 + 2/(self.eta * sqrt(4*self.yc[i]**2 + self.rpr**2))))
-    return s1
+        return s1
 
     def Mpot(self, xc, yc, npr, rf, rpr):
         # Calcula a matriz dos potenciais
@@ -71,7 +71,7 @@ class Linha_transmissao:
                     pot[i, j] = log((2*(self.yc[i])/self.rf))
                 else:  # para-raio
                     pot[i, j] = log((2*(self.yc[i])/self.rpr))
-    return pot
+        return pot
 
     def zexternal(self, rho, npr, xc, yc, rf, rpr):
         p = sqrt(self.rho/(1j*self.omega*mu_0))
@@ -90,14 +90,14 @@ class Linha_transmissao:
                 else:
                     zout[i, j] = 1j*self.omega*mu_0 / \
                         (2*pi)*log((2*(self.yc[i]+p))/self.rpr)
-    return zout
+        return zout
 
     def Zint(self, omega, rhoc, rf):
         # Calcula a impedancia interna de um condutor cilindrico
         etac = sqrt((1j*self.omega*mu_0)/self.rhoc)
         zint = rhoc*(etac/(2*pi*self.rf)) * \
             (i0(etac*self.rf)/i1(etac*self.rf))
-    return zint
+        return zint
 
     def Zinttub(self, omega, rhoc, rf, ri):
         # Calcula a impedancia interna de um condutor tubular
@@ -107,7 +107,7 @@ class Linha_transmissao:
         den = i1(etac*self.rf)*k1(etac*self.ri) - \
             i1(etac*self.ri)*k1(etac*self.rf)
         zin = self.rhoc*(etac/(2*pi*self.rf))*(num/den)
-    return zint
+        return zint
 
     def Zin(self, xc, npr, rhoc, rhoc_pr, rf, ri):
         ncond = len(self.xc)
@@ -123,9 +123,9 @@ class Linha_transmissao:
                         self, omega, self.rhoc, self.rf, self.ri)
                 else:  # pararaio
                     zin[i, j] = self.Zint(self.omega, self.rhoc_pr, self.rpr)
-    return zin
+        return zin
 
     def impedancia(self, epsilon_r, sigma_s, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
         Z = self.Zin(self.xc, self.npr, self.rhoc, self.rhoc_pr, self.rf, self.ri) + (((1j*omega*mu_0)/2/pi)
                                                                                       * (self.Mpot(self.xc, self.yc, self.npr, self.rf, self.rpr) + self.S1(self.xc, self.npr, self.yc, self.rf, self.rpr)))
-    return Z
+        return Z

@@ -1,3 +1,5 @@
+from numpy import sqrt
+
 # função para calcular o raio equivalente
 def raio_eq(n, rext, R):
     #R = raio do cicrulo que sera o novo condutor

@@ -6,4 +6,4 @@ Arquivos para a disciplina de transmissão de energia elétrica da Universidade 
 - Lucas Lorenzo Sousa Alonso
 - Igor Ruys Cartucho
 
-Caso deseje utilizar os códigos presentes ness arquivo, entre em contato com um dos responsáveis para solicitar a autorização de uso.
+Caso deseje utilizar os códigos presentes nesse repositório, entre em contato com um dos responsáveis para solicitar a autorização de uso.

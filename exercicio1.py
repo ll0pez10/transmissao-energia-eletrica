@@ -1,6 +1,8 @@
 from .linha_transmissao import Linha_transmissao
 from metodos_linhas import raio_eq, Pnat
 
+
+
 # Dados dos condutores de fase
 # Name: (r0,r1,pfase) ohms/m
 CondutoresEspecs = {"Bluejay": (8.702*10**-3, 15.977*10**-3, 29.544*10**-9),
@@ -14,20 +16,22 @@ CondutoresEspecs = {"Bluejay": (8.702*10**-3, 15.977*10**-3, 29.544*10**-9),
                     "3/8 EHS": (0, 4.570*10**-3, 276.470*10**-9)}
 #------------------------------------------------------------------------------------------------------
 
-#Name: (db,(Xc-1,Xc0,Xc1),(Yc-1,Yc,Yc+1),(Xpr,Ypr,Xpr2,Ypr2),n)
+#Name: (rext,rint,(Xc-1,Xc0,Xc1),(Yc-1,Yc,Yc+1),(Xpr,Ypr,Xpr2,Ypr2),n)
 # n é o numero de condutores por fase
-# db é o lado do quadrado, quando os condutores estão dispostos como tal
 # Xc cordenadas dos centros dos 4 condutores
 # Yc cordenadas dos centros dos 4 condutores PS: na formula subtrai por 2/3 da flecha
-CondutoresPos = {"Bluejay": (.475, (-15.85, 0, 15.85), (35.9-2*20.9/3, 35.9-2*20.9/3, 35.9-2*20.9/3), (-14.45, 45.9-2*14.7/3, 14.45, 45.9-2*14.7/3), 4),
-                 "Rail Normal": (.475, (-15, -11, -6, 6, 11, 15), (23.2, 33.2, 23.2, 23.2, 33.2, 23.2), (-8.8, 42.7, 8.8, 42.7), 4),
+CondutoresPos = {"Bluejay": (raio_eq(4, CondutoresEspecs["Bluejay"][1], .475*sqrt(2)/2),raio_eq(4, CondutoresEspecs["Bluejay"][0], .475*sqrt(2)/2) ,(-15.85, 0, 15.85), (35.9-2*20.9/3, 35.9-2*20.9/3, 35.9-2*20.9/3), (-14.45, 45.9-2*14.7/3, 14.45, 45.9-2*14.7/3), 4),
+                 "Rail Normal": (raio_eq(4, CondutoresEspecs["Rail"][1]), raio_eq(4, CondutoresEspecs["Rail"][0]), (-15, -11, -6, 6, 11, 15), (23.2, 33.2, 23.2, 23.2, 33.2, 23.2), (-8.8, 42.7, 8.8, 42.7), 4),
                  }
 
 # ============ 500kV rail convencional ===============
 #2 ultimos elementos sao pararraio, da forma (x, y)
 n_rail_comp = 3
-R_rail_comp = (CondutoresEspecs["Rail"][1] *
+R_rail_compExt = (CondutoresEspecs["Rail"][1] *
                np.sqrt(3))/3 + CondutoresEspecs["Rail"][1]
+
+R_rail_compInt = (CondutoresEspecs["Rail"][0] *
+               np.sqrt(3))/3 + CondutoresEspecs["Rail"][0]
 
 xy = ((-11.000, 10.736), (-10.771, 11.132),
       (-11.229, 11.132), (0.000, 10.736), (0.229,
@@ -42,12 +46,15 @@ xyc = (((-10.771 + -11.229)/2, (11.132 - 2*10.736)/3),
 
 R = sqrt((xyc[0][0] - xy[0][0])**2 + (xyc[0][1] - xy[0][1])**2)
 
-CondutoresPos["Rail Convencional"] = (0, (xyc[0][0], xyc[1][0], xyc[2][0]),
+CondutoresPos["Rail Convencional"] = (raio_eq(3, CondutoresEspecs["Rail"][1], R_rail_compExt),raio_eq(4, CondutoresEspecs["Rail"][0], R_rail_compInt),
+                                    (xyc[0][0], xyc[1][0], xyc[2][0]),
                                       (xyc[0][1], xyc[1][1], xyc[2][1]),
                                       (xyc[3][0], xyc[3][1], xyc[4][0], xyc[4][1]), 3)
 
+
 # ================= 500kV rail compacto ====================
 #2 ultimos elementos sao pararraio, da forma (x, y)
+
 n_rail_comp = 4
 R_rail_comp = 0
 

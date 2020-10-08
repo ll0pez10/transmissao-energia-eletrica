@@ -129,3 +129,31 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq
                                       (xy1c[0][1], xy1c[1][1], xy1c[2][1]),
                                       (xy1c[3][0], xy1c[3][1], xy1c[4][0], xy1c[4][1]), 4)
 
+
+####------CALCULO DOS PARAMETROS PARA CADA CONDUTOR----
+
+#(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+for i in CondutoresPos:
+    print("Linha: " + i)
+    Linha = Linha_transmissao(CondutoresPos[i][0], 0, 3, 1, CondutoresPos[i][2], CondutoresPos[i][3], CondutoresEspecs[i][2], CondutoresEspecs["3/8 EHS"][2], CondutoresPos["Bluejay"][1], CondutoresEspecs["3/8 EHS"][1])
+    Z=Linha.impedancia
+    #Y=Linha.impedanciaY
+    #Retiramos as info do pararaio das matrizes atraves da reducao de kron
+    Zabc = 0j + np.zeros((3,3))
+    Yabc = 0j + np.zeros((3,3))
+    if (Linha.npr==1):
+        for i in range(3):
+            for j in range(3):
+                Zabc[i][j]=z1[i][j]-(z1[i][3]*z1[3][j]/z1[3][3])
+                Yabc[i][j]=y1[i][j]-(y1[i][3]*y1[3][j]/y1[3][3])
+    elif (Linha.npr==2):
+        #desenvolver
+
+    #matrizes de sequencia
+    a = complex(-0.5,0.866025)
+    a2 = a**2
+    A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
+    z012 = np.linalg.inv(A)@Zabc@A
+    y012 = np.linalg.inv(A)@Yabc@A
+    print("Impedancia Z+ = " + str(z012))
+    print("Impedancia Y+ = " + str(y012))

@@ -170,6 +170,8 @@ for i in CondutoresPos:
     Linha = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
     Z = Linha.impedancia()
     Y = Linha.admitancia()
+    Z = Z.astype(np.csingle)
+    Y = Y.astype(np.csingle)
     #Retiramos as info do pararaio das matrizes atraves da reducao de kron
     Zabc = 0j + np.zeros((3,3))
     Yabc = 0j + np.zeros((3,3))
@@ -184,5 +186,5 @@ for i in CondutoresPos:
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
     z012 = inv(A)@Zabc@A
     y012 = inv(A)@Yabc@A
-    print("Impedancia Z+ = " + str(z012))
-    print("Impedancia Y+ = " + str(y012))
+    print("Impedancia Z+ = " + str(z012[1][1]))
+    print("Impedancia Y+ = " + str(y012[1][1]))

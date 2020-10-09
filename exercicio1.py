@@ -2,8 +2,9 @@ from linha_transmissao import Linha_transmissao
 from metodos_linhas import raio_eq, Pnat
 from numpy import sqrt
 import numpy as np
+from numpy.linalg import inv
 
-
+np.set_printoptions(linewidth=500)
 
 # Dados dos condutores de fase
 # Name: (r0,r1,pfase) ohms/m
@@ -42,14 +43,14 @@ xy = ((-11.000, 10.736), (-10.771, 11.132),
       (10.771, 11.132), (11.229, 11.132), (-6.000, 22.000), (6.000, 22.000))
 
 #centro dos condutores equivalentes (os dois ultimos pares sao dos para-raios)
-xyc = (((-10.771 + -11.229)/2, (11.132 - 2*10.736)/3),
-       ((0.229 + -0.229)/2, (11.132 - 2*10.736)/3),
-       ((10.771 + 11.229)/2, (11.132 - 2*10.736)/3),
+xyc = (((-10.771 + -11.229)/2, (2*11.132 + 10.736)/3),
+       ((0.229 + -0.229)/2, (2*11.132 + 10.736)/3),
+       ((10.771 + 11.229)/2, (2*11.132 + 10.736)/3),
        (-6.000, 22.000), (6.000, 22.000))
 
 R = sqrt((xyc[0][0] - xy[0][0])**2 + (xyc[0][1] - xy[0][1])**2)
 
-CondutoresPos["Rail Convencional"] = (raio_eq(3, CondutoresEspecs["Rail"][1], R_rail_compExt),raio_eq(4, CondutoresEspecs["Rail"][0], R_rail_compInt),
+CondutoresPos["Rail Convencional"] = (raio_eq(3, CondutoresEspecs["Rail"][1], R),raio_eq(4, CondutoresEspecs["Rail"][0], R),
                                     (xyc[0][0], xyc[1][0], xyc[2][0]),
                                       (xyc[0][1], xyc[1][1], xyc[2][1]),
                                       (xyc[3][0], xyc[3][1], xyc[4][0], xyc[4][1]), 3)
@@ -61,21 +62,22 @@ CondutoresPos["Rail Convencional"] = (raio_eq(3, CondutoresEspecs["Rail"][1], R_
 n_rail_comp = 4
 R_rail_comp = 0
 
-xy2 = ((-4.271, 10.771), (-4.271, 11.229), (-4.729, 11.229), (-4.729,
-                                                              10.771), (0.229, 15.271),
-       (0.229, 15.729), (-0.229, 15.729), (-0.229, 15.271), (4.271,
-                                                             10.771), (4.271, 11.229), (4.729, 11.229), (4.729,
-                                                                                                         10.771), (-3.500, 26.000), (3.500, 26.000))
+xy2 = ((-4.271, 10.771), (-4.271, 11.229), (-4.729, 11.229), (-4.729, 10.771), (0.229, 15.271),
+       (0.229, 15.729), (-0.229, 15.729), (-0.229, 15.271), (4.271,10.771),
+       (4.271, 11.229), (4.729, 11.229), (4.729, 10.771), (-3.500, 26.000), (3.500, 26.000))
+       
 # centro dos condutores equivalentes (os dois ultimos pares sao dos para-raios)
 xy2c = (((-4.271 + -4.729)/2, (10.771+11.229)/2),
         ((0.229 + -0.229)/2, (15.729 + 15.271)/2),
         ((4.271 + 4.729)/2, (11.229 + 10.771)/2),
         (-3.500, 26.000), (3.500, 26.000))
+        
+R2 = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)
 
 Rext = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
 
-CondutoresPos["Rail Compacto"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
+CondutoresPos["Rail Compacto"] = (raio_eq(4, CondutoresEspecs["Rail"][1], R2),raio_eq(4, CondutoresEspecs["Rail"][1], R2),
                                  (xy2c[0][0], xy2c[1][0], xy2c[2][0]),
                                       (xy2c[0][1], xy2c[1][1], xy2c[2][1]),
                                       (xy2c[3][0], xy2c[3][1], xy2c[4][0], xy2c[4][1]), 4)
@@ -98,11 +100,13 @@ xy3c = (((-7.229 + -6.771)/2, (8.639 + 10.500)/2),
         (((6.771 + 7.229)/2, (8.639 + 10.500)/2)),
         (-5.000, 20.500), (5.000, 20.500))
 
+R3 = sqrt((xy3c[0][0] - xy3[0][0])**2 + (xy3c[0][1] - xy3[0][1])**2)
+
 Rext = sqrt((xy3c[0][0] - xy3[0][0])**2 + (xy3c[0][1] - xy3[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
 
 
-CondutoresPos["Rail Recapacitado"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
+CondutoresPos["Rail Recapacitado"] = (raio_eq(4, CondutoresEspecs["Rail"][1], R3),raio_eq(4, CondutoresEspecs["Rail"][1], R3),
                                      (xy3c[0][0], xy3c[1][0], xy3c[2][0]),
                                       (xy3c[0][1], xy3c[1][1], xy3c[2][1]),
                                       (xy3c[3][0], xy3c[3][1], xy3c[4][0], xy3c[4][1]), 4)
@@ -124,38 +128,61 @@ xy1c = (((-7.229 + -6.771)/2, 10.5),
 
 Rext = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Ruddy"][0]/CondutoresEspecs["Ruddy"][1]
+R1 = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)
 
-CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq(2, CondutoresEspecs["Ruddy"][1], Rint),
+CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),
                                      (xy1c[0][0], xy1c[1][0], xy1c[2][0]),
                                       (xy1c[0][1], xy1c[1][1], xy1c[2][1]),
                                       (xy1c[3][0], xy1c[3][1], xy1c[4][0], xy1c[4][1]), 4)
 
 
-####------CALCULO DOS PARAMETROS PARA CADA CONDUTOR----
+#===================================================================================================
+#========================== CALCULO DOS PARAMETROS PARA CADA CONDUTOR ==============================
+#===================================================================================================
+
 
 #(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
+nfase = 3
+npr = 2
 for i in CondutoresPos:
+    
+    if i == "Bluejay":
+        nameSpec = "Bluejay"
+    else:
+        nameSpec = "Rail"
+    #O Rail normal e diferente. Aparentemente e uma LT dupla
+    if i == "Rail Normal":
+        continue
+        
+    #(rext,rint,(Xc-1,Xc0,Xc1),(Yc-1,Yc,Yc+1),(Xpr,Ypr,Xpr2,Ypr2),n)
+    r_ext = CondutoresPos[i][0]
+    r_int = CondutoresPos[i][1]
+    nfase = 3
+    xc = np.concatenate((np.array(CondutoresPos[i][2]), np.array([CondutoresPos[i][4][0]]), np.array([CondutoresPos[i][4][2]])))
+    yc = np.concatenate(( np.array(CondutoresPos[i][3]), np.array([CondutoresPos[i][4][1]]) , np.array([CondutoresPos[i][4][3]]) ))
+    rhoc = CondutoresEspecs[nameSpec][2]
+    rhoc_pr = CondutoresEspecs["3/8 EHS"][2]
+    rf = r_ext
+    rpr = CondutoresEspecs["3/8 EHS"][1]
+    
+    
     print("Linha: " + i)
-    Linha = Linha_transmissao(CondutoresPos[i][0], 0, 3, 1, CondutoresPos[i][2], CondutoresPos[i][3], CondutoresEspecs[i][2], CondutoresEspecs["3/8 EHS"][2], CondutoresPos["Bluejay"][1], CondutoresEspecs["3/8 EHS"][1])
+    Linha = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
     Z = Linha.impedancia()
     Y = Linha.admitancia()
     #Retiramos as info do pararaio das matrizes atraves da reducao de kron
     Zabc = 0j + np.zeros((3,3))
     Yabc = 0j + np.zeros((3,3))
-    if (Linha.npr==1):
-        for i in range(3):
-            for j in range(3):
-                Zabc[i][j]=Z[i][j]-(Z[i][3]*Z[3][j]/Z[3][3])
-                Yabc[i][j]=Y[i][j]-(Y[i][3]*Y[3][j]/Y[3][3])
-    elif (Linha.npr==2):
-        pass
-        #desenvolver. Se pa botamos dentro do outro, pq para a redução de 2 pararaios temos que primeiro reduzir o primeiro de qualquer forma.
+    
+    Zabc = Z[0:nfase,0:nfase] - Z[0:nfase,nfase:] @ inv(Z[nfase:,nfase:]) @ Z[nfase:,0:nfase]
+    Yabc = Y[0:nfase,0:nfase] - Y[0:nfase,nfase:] @ inv(Y[nfase:,nfase:]) @ Y[nfase:,0:nfase]
+
 
     #matrizes de sequencia
-    a = complex(-0.5,0.866025)
+    a = np.exp(1j * np.deg2rad(120))
     a2 = a**2
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
-    z012 = np.linalg.inv(A)@Zabc@A
-    y012 = np.linalg.inv(A)@Yabc@A
-    #print("Impedancia Z+ = " + str(z012))
-    #print("Impedancia Y+ = " + str(y012))
+    z012 = inv(A)@Zabc@A
+    y012 = inv(A)@Yabc@A
+    print("Impedancia Z+ = " + str(z012))
+    print("Impedancia Y+ = " + str(y012))

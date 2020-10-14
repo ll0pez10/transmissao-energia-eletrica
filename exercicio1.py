@@ -144,7 +144,7 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),raio_eq(2
 #(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
 nfase = 3
 npr = 2
-Vs = {"Bluejay": 750*1000,"Rail": 500*1000, "Rail":500*1000, "Rail":500*1000, "Rail":500*1000,"Ruddy": 345*1000}
+Vs = {"Bluejay": 750*1000,"Rail normal": 500*1000, "Rail convencional":500*1000, "Rail compacto":500*1000, "Rail recapacitado":500*1000,"Ruddy": 345*1000}
 for i in CondutoresPos:
     
     if i == "Bluejay":

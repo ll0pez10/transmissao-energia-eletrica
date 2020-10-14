@@ -98,7 +98,6 @@ class Linha_transmissao:
     def Zin(self):
         ncond = len(self.xc)
         zin = np.eye(ncond)*1j
-
         for i in range(ncond):
             for j in range(ncond):
                 if i != j:  # entre fases

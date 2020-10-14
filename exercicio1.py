@@ -144,9 +144,9 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq
 #(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
 nfase = 3
 npr = 2
-Vs = {"Bluejay": 750*1000,"Rail normal": 500*1000, "Rail convencional":500*1000, "Rail compacto":500*1000, "Rail recapacitado":500*1000,"Ruddy": 345*1000}
+Vs = [750000, 500000, 500000, 500000, 500000, 345000]
+j = 0
 for i in CondutoresPos:
-    
     if i == "Bluejay":
         nameSpec = "Bluejay"
     else:
@@ -187,7 +187,9 @@ for i in CondutoresPos:
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
     z012 = inv(A)@Zabc@A
     y012 = inv(A)@Yabc@A
-    Pnat = Pnat(Vs[i], Vr, Ir)
+    Pnat = Pnat(Vs[j], z012[1][1], y012[1][1])
+
     print("Impedancia Z+ = " + str(z012[1][1]))
     print("Impedancia Y+ = " + str(y012[1][1]))
-
+    print("Potencia natural = {}W" .format(Pnat))
+    j+=1

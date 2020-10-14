@@ -4,7 +4,7 @@ from numpy import sqrt
 def raio_eq(n, rext, R):
     #R = raio do cicrulo que sera o novo condutor
     #rext = raio do feixe de condutor
-    re = sqrt((rext*n*(R**(n-1))))
+    re = (rext*n*(R**(n-1)))**(1.0/n)
     return re
 
 # potencia caracteristica

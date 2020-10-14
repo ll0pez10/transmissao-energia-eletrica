@@ -144,6 +144,7 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),raio_eq(2
 #(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
 nfase = 3
 npr = 2
+Vs = {"Bluejay": 750*1000,"Rail": 500*1000, "Rail":500*1000, "Rail":500*1000, "Rail":500*1000,"Ruddy": 345*1000}
 for i in CondutoresPos:
     
     if i == "Bluejay":
@@ -186,5 +187,7 @@ for i in CondutoresPos:
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
     z012 = inv(A)@Zabc@A
     y012 = inv(A)@Yabc@A
+    Pnat = Pnat(Vs[i],)
     print("Impedancia Z+ = " + str(z012[1][1]))
     print("Impedancia Y+ = " + str(y012[1][1]))
+

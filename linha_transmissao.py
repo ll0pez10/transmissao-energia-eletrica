@@ -111,10 +111,10 @@ class Linha_transmissao:
     def impedancia(self):
         #Calcula a matriz de impedancia
         Z = self.Zin() + (((1j*self.omega*mu_0)/2/pi) * (self.Mpot() + self.S1()))
-        return Z
+        return Z*1000 #Saida da matriz de impedancia em ohms/km
 
     def admitancia(self):
         #Calcula a matriz de admitancia
         Y =  1j*self.omega*2*np.pi*epsilon_0*(np.linalg.inv(self.Mpot())) + 3.0*10**(-11)*np.eye(self.ncond)
-        return Y
+        return Y*1000 #Saida da matriz de admitancia em ohms/km
 

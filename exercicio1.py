@@ -77,7 +77,7 @@ R2 = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)
 Rext = sqrt((xy2c[0][0] - xy2[0][0])**2 + (xy2c[0][1] - xy2[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
 
-CondutoresPos["Rail Compacto"] = (raio_eq(4, CondutoresEspecs["Rail"][1], R2),raio_eq(4, CondutoresEspecs["Rail"][1], R2),
+CondutoresPos["Rail Compacto"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
                                  (xy2c[0][0], xy2c[1][0], xy2c[2][0]),
                                       (xy2c[0][1], xy2c[1][1], xy2c[2][1]),
                                       (xy2c[3][0], xy2c[3][1], xy2c[4][0], xy2c[4][1]), 4)
@@ -106,7 +106,7 @@ Rext = sqrt((xy3c[0][0] - xy3[0][0])**2 + (xy3c[0][1] - xy3[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Rail"][0]/CondutoresEspecs["Rail"][1]
 
 
-CondutoresPos["Rail Recapacitado"] = (raio_eq(4, CondutoresEspecs["Rail"][1], R3),raio_eq(4, CondutoresEspecs["Rail"][1], R3),
+CondutoresPos["Rail Recapacitado"] = (raio_eq(4, CondutoresEspecs["Rail"][1], Rext),raio_eq(4, CondutoresEspecs["Rail"][1], Rint),
                                      (xy3c[0][0], xy3c[1][0], xy3c[2][0]),
                                       (xy3c[0][1], xy3c[1][1], xy3c[2][1]),
                                       (xy3c[3][0], xy3c[3][1], xy3c[4][0], xy3c[4][1]), 4)
@@ -130,7 +130,7 @@ Rext = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)/2
 Rint = Rext*CondutoresEspecs["Ruddy"][0]/CondutoresEspecs["Ruddy"][1]
 R1 = sqrt((xy1c[0][0] - xy1[0][0])**2 + (xy1c[0][1] - xy1[0][1])**2)
 
-CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),raio_eq(2, CondutoresEspecs["Ruddy"][1], R1),
+CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq(2, CondutoresEspecs["Ruddy"][1], Rint),
                                      (xy1c[0][0], xy1c[1][0], xy1c[2][0]),
                                       (xy1c[0][1], xy1c[1][1], xy1c[2][1]),
                                       (xy1c[3][0], xy1c[3][1], xy1c[4][0], xy1c[4][1]), 4)

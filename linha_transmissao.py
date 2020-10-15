@@ -1,13 +1,15 @@
 from numpy import exp, abs, angle, conj
 import numpy as np
 from scipy.constants import mu_0, epsilon_0
-from scipy.special import k1, k0, i1, i0
+from scipy.special import k1, k0, i1, i0 #fucoes que representam as funcoes de bessel
 from mpmath import *
 mp.dps = 25
 mp.pretty = True
 
 
 class Linha_transmissao:
+#Classe que simplifica o calculo dos parametros de uma LT (matriz de impedancia, matriz de admitancia...)
+#calculando os parametros com base nos inputs fornecidos (ver definicao de cada um dentro do __init__)
     def __init__(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
         #r_int: raio interno do condutor de fase
         #r_ext: raio externo do condutor de fase

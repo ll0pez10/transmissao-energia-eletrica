@@ -233,6 +233,6 @@ for i in CondutoresPos:
         Pnatural = 2*Pnat(Vs[j], z012[1][1], y012[1][1])
 
     print("Impedancia Z+ = {} Ohms"  .format(z012[1][1]))
-    print("Impedancia Y+ = {} Ohms"  .format(y012[1][1]))
+    print("Admitância Y+ = {} Ohms"  .format(y012[1][1]))
     print("Potencia natural = {} MW\n" .format(round(Pnatural/(10**6),3)))
     j+=1

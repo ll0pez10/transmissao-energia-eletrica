@@ -153,6 +153,20 @@ for i in CondutoresPos:
         nameSpec = "Rail"
     #O Rail normal e diferente. Aparentemente e uma LT dupla
     if i == "Rail Normal":
+        #nfase = 6
+        # npr = 2
+        #r_ext = CondutoresPos[i][0]
+        #r_int = CondutoresPos[i][1]
+        #xc = np.concatenate((np.array(CondutoresPos[i][2]), np.array([CondutoresPos[i][4][0]]), np.array([CondutoresPos[i][4][2]])))
+        #xc_n = np.concatenate((np.array(-CondutoresPos[i][2]), np.array(-[CondutoresPos[i][4][0]]), np.array(-[CondutoresPos[i][4][2]])))
+        #yc = np.concatenate(( np.array(CondutoresPos[i][3]), np.array([CondutoresPos[i][4][1]]) , np.array([CondutoresPos[i][4][3]]) ))
+        #yc_n = np.concatenate(( np.array(-CondutoresPos[i][3]), np.array(-[CondutoresPos[i][4][1]]) , np.array(-[CondutoresPos[i][4][3]]) ))
+        #rhoc = CondutoresEspecs[nameSpec][2]
+        #rhoc_pr = CondutoresEspecs["3/8 EHS"][2]
+        #rf = r_ext
+        #rpr = CondutoresEspecs["3/8 EHS"][1]
+        #print("Linha: " + i)
+        #Linha = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
         continue
         
     #(rext,rint,(Xc-1,Xc0,Xc1),(Yc-1,Yc,Yc+1),(Xpr,Ypr,Xpr2,Ypr2),n)

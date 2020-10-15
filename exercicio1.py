@@ -189,7 +189,7 @@ for i in CondutoresPos:
     y012 = inv(A)@Yabc@A
     Pnatural = Pnat(Vs[j], z012[1][1], y012[1][1])
 
-    print("Impedancia Z+ = " + str(z012[1][1]))
-    print("Impedancia Y+ = " + str(y012[1][1]))
-    print("Potencia natural = {}W" .format(Pnatural/(10**6)))
+    print("Impedancia Z+ = {}Ohm"  .format(z012[1][1]))
+    print("Impedancia Y+ = {}Ohm"  .format(y012[1][1]))
+    print("Potencia natural = {}MW" .format(Pnatural/(10**6)))
     j+=1

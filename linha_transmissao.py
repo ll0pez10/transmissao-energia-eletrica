@@ -117,4 +117,3 @@ class Linha_transmissao:
         #Calcula a matriz de admitancia
         Y =  1j*self.omega*2*np.pi*epsilon_0*(np.linalg.inv(self.Mpot())) + 3.0*10**(-11)*np.eye(self.ncond)
         return Y*1000 #Saida da matriz de admitancia em ohms/km
-

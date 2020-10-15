@@ -187,9 +187,9 @@ for i in CondutoresPos:
     A = np.array([[1, 1, 1], [1, a2, a], [1, a, a2]])
     z012 = inv(A)@Zabc@A
     y012 = inv(A)@Yabc@A
-    Pnat = Pnat(Vs[j], z012[1][1], y012[1][1])
+    Pnatural = Pnat(Vs[j], z012[1][1], y012[1][1])
 
     print("Impedancia Z+ = " + str(z012[1][1]))
     print("Impedancia Y+ = " + str(y012[1][1]))
-    print("Potencia natural = {}W" .format(Pnat))
+    print("Potencia natural = {}W" .format(Pnatural/(10**6)))
     j+=1

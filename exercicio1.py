@@ -197,7 +197,7 @@ for i in CondutoresPos:
         #(rext,rint,(Xc-1,Xc0,Xc1),(Yc-1,Yc,Yc+1),(Xpr,Ypr,Xpr2,Ypr2),n)
         r_ext = CondutoresPos[i][0]
         r_int = CondutoresPos[i][1]
-        npr = 1
+        npr = 2
         nfase = 3
         xc = np.concatenate((np.array(CondutoresPos[i][2]), np.array([CondutoresPos[i][4][0]]), np.array([CondutoresPos[i][4][2]])))
         yc = np.concatenate(( np.array(CondutoresPos[i][3]), np.array([CondutoresPos[i][4][1]]) , np.array([CondutoresPos[i][4][3]]) ))

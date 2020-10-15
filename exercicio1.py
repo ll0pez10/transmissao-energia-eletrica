@@ -1,6 +1,5 @@
 from linha_transmissao import Linha_transmissao
 from metodos_linhas import raio_eq, Pnat
-
 from numpy import sqrt
 import numpy as np
 from numpy.linalg import inv
@@ -175,7 +174,7 @@ for i in CondutoresPos:
         print("Linha: " + i)
         Linha = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
     
-        #Uma vez contruida a linha podemos determinar seus parametros de impedancia e admitancia
+        #Uma vez construida a linha podemos determinar seus parametros de impedancia e admitancia
         Z = Linha.impedancia()
         Y = Linha.admitancia()
         Z = Z.astype(np.csingle) #Codigo necessario para o python ler o tipo de variavel 

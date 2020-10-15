@@ -144,6 +144,10 @@ CondutoresPos["Ruddy"] = (raio_eq(2, CondutoresEspecs["Ruddy"][1], Rext),raio_eq
 #(self, r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, rf, rpr):
 Vs = [750000, 500000, 500000, 500000, 500000, 345000] #Voltagem dos condutores. Será util para o calculo da potencia
 j = 0 #Contagem de iterações feitas. Util para escolher a voltagem
+
+print((20*2+7)*'=')
+print(20*'=' + " Resultados " + 20*'=')
+print((20*2+7)*'=' + '\n')
 for i in CondutoresPos:
     #matrizes de sequencia
     a = np.exp(1j * np.deg2rad(120))
@@ -156,12 +160,12 @@ for i in CondutoresPos:
         nameSpec = "Bluejay"
     else:
         nameSpec = "Rail"
-        
+
+    npr = 2 #numero de para-raios
     #Necessario fazer um if para o caso do rail normal pois é o unico circuito duplo, então devemos tomar alguns cuidados
     if i == "Rail Normal":
         #Atribuimos os valores que serão utilizados para chamar a classe. Raios, numero de condutores, posição espacial dos condutores, rhos
         nfase = 6
-        npr = 2
         r_ext = CondutoresPos[i][0]
         r_int = CondutoresPos[i][1]
         xc = np.concatenate((np.array(CondutoresPos[i][2]), np.array([CondutoresPos[i][4][0]]), np.array([CondutoresPos[i][4][2]])))
@@ -175,7 +179,7 @@ for i in CondutoresPos:
         print("Linha: " + i)
         Linha = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
     
-        #Uma vez contruida a linha podemos determinar seus parametros de impedancia e admitancia
+        #Uma vez construida a linha podemos determinar seus parametros de impedancia e admitancia
         Z = Linha.impedancia()
         Y = Linha.admitancia()
         Z = Z.astype(np.csingle) #Codigo necessario para o python ler o tipo de variavel 

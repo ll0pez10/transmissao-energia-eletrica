@@ -198,7 +198,12 @@ rail4=rail3+delta3
 rail5=rail4+delta2
 rail6=rail5+delta1
 
-Xc=(CondutoresPos["Bluejay"][2][0],CondutoresPos["Bluejay"][2][1],CondutoresPos["Bluejay"][2][2],rail1,rail2,rail3,rail4,rail5,rail6)
+X#Condutores
+Xc=[]
+for i in (CondutoresPos["Bluejay"][3]):
+    Xc.append(i) 
+
+Xc=Xc+[rail1,rail2,rail3,rail4,rail5,rail6]
 
 Yc=[]
 for i in (CondutoresPos["Bluejay"][3]):
@@ -210,9 +215,21 @@ for i in (CondutoresPos["Rail Normal"][3]):
 print(Xc)
 print(Yc)
 
+#Para-raio
+Xpr=[]
+Ypr=[]
+for i in range(0,len(CondutoresPos["Bluejay"][4]),2):
+    Xpr.append(CondutoresPos["Bluejay"][4][i]) 
+    
+for i in range(1,len(CondutoresPos["Bluejay"][4]),2):
+    Ypr.append(CondutoresPos["Bluejay"][4][i]) 
 
-# In[ ]:
+delta=abs(CondutoresPos["Rail Normal"][2][0]-CondutoresPos["Rail Normal"][4][0])
+Xpr.append(rail1+delta)
+Xpr.append(rail6-delta)
 
+for i in range(1,len(CondutoresPos["Rail Normal"][4]),2):
+    Ypr.append(CondutoresPos["Rail Normal"][4][i]) 
 
-
-
+print(Xpr)
+print(Ypr)

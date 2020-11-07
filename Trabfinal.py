@@ -189,8 +189,8 @@ L=L+0.22+0.01*750000 #distancia minima entre os condutores localizados em circui
 #temos que reconstruir a matriz Xc. Yc por sua vez permanece igual
 #Bluejay permanece igual, rail a gnt soma a distancia minima
 delta1=abs(CondutoresPos["Rail Normal"][2][1]-CondutoresPos["Rail Normal"][2][0])
-delta2=abs(CondutoresPos["Rail Normal"][2][1]-CondutoresPos["Rail Normal"][2][3])
-delta3=abs(CondutoresPos["Rail Normal"][2][4]-CondutoresPos["Rail Normal"][2][3])
+delta2=abs(CondutoresPos["Rail Normal"][2][1]-CondutoresPos["Rail Normal"][2][2])
+delta3=abs(CondutoresPos["Rail Normal"][2][2]-CondutoresPos["Rail Normal"][2][3])
 rail1=L+CondutoresPos["Bluejay"][2][2]
 rail2=rail1+delta1
 rail3=rail2+delta2
@@ -198,9 +198,9 @@ rail4=rail3+delta3
 rail5=rail4+delta2
 rail6=rail5+delta1
 
-X#Condutores
+#Condutores
 Xc=[]
-for i in (CondutoresPos["Bluejay"][3]):
+for i in (CondutoresPos["Bluejay"][2]):
     Xc.append(i) 
 
 Xc=Xc+[rail1,rail2,rail3,rail4,rail5,rail6]
@@ -224,7 +224,7 @@ for i in range(0,len(CondutoresPos["Bluejay"][4]),2):
 for i in range(1,len(CondutoresPos["Bluejay"][4]),2):
     Ypr.append(CondutoresPos["Bluejay"][4][i]) 
 
-delta=abs(CondutoresPos["Rail Normal"][2][0]-CondutoresPos["Rail Normal"][4][0])
+delta=abs(CondutoresPos["Rail Normal"][2][0]-CondutoresPos["Rail Normal"][4][0]) #diferenca da distancia do pararaio pro primeiro condutor do rail
 Xpr.append(rail1+delta)
 Xpr.append(rail6-delta)
 

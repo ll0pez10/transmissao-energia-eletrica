@@ -189,18 +189,24 @@ y012_rail = inv(A)@Yabc_rail@A
 #=================================================================================================
 #============================================= Quadripolos =======================================
 #=================================================================================================
-
+L = 750 #km
+Sbase = 300e6 #VA
+Vbaseblue = 750e3 #V
+Vbaserail = 500e3 #V
+Vbasegera = 250e3 #V
+Zbaseblue = Sbase/Vbaseblue #ohms
+Zbaserail = Sbase/Vbaserail #ohms
+#Ybase = 1/Zbase
+Xg = 2.4 #impedancia em pu do gerador
+Qg = np.array( [[1,Xg],[0, 1]] ) #quadripolo do gerador
+Xt = 3 #impedancia em pu do transformador
+Qt = np.array( [[1,Xg],[0, 1]] ) #quadripolo do transformador
 
 #======================================== Bluejay ==============================================
-#---------------- Gerador ---------------
-Sg = 300e6 #potencia
-Xg = 15.24 #impedancia [Ohms]
-
-Qg = np.array( [[1,Xg],[0, 1]] ) #quadripolo do gerador
 
 #------ Linha Bluejay (modelo pi) -------
-Z1 = z012_bluejay[1][1] #impedancia considerando a sequencia positiva
-Y1 = z012_bluejay[1][1] #admitancia considerando a sequencia negativa
+Z1 = z012_bluejay[1][1]/Zbaseblue*L #impedancia considerando a sequencia positiva
+Y1 = y012_bluejay[1][1]*Zbaseblue*L #admitancia considerando a sequencia negativa
 
 #Componentes da matriz de quadripolo
 A1 = 1 + Z1*Y1/2
@@ -214,15 +220,16 @@ QL_b = np.array( [[A1, A2],[A3, A4]] ) #Quadripolo da linha bluejay
 #-------------- Testes --------------------------
 #fator de potencia unitario na carga
 
-Vg = 750e3 #tensao no gerador
+Vg = 0.95*750e3 #tensao de entrada na linha
+Vg = Vg/Vbaseblue
 #Ig = Sg/(np.sqrt(3) * Vg) #corrente no gerador
 #VI_carga = inv(Qg @ QL_b) @ np.array([Vg, Ig])
 
 #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
-print("- Linha em vazio -")
+print("- Linha em vazio -BLUEJAY ")
 Vr = Vg/A1
 Ig = A3*Vr
-print("Vr = %.2e < %.2f   V =   %.2f pu" % (abs(Vr),np.rad2deg(np.angle(Vr)),abs(Vr/Vg)))
+print("Vr = %.2e < %.2f   V =   %.2f pu" % (abs(Vr),np.rad2deg(np.angle(Vr)),abs(Vr)))
 print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 
@@ -249,15 +256,10 @@ print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 #======================================== Rail Normal ===========================================
 
-#------------- Gerador --------------
-Sg = 450e6 #potencia [VA]
-Xg = 15.24 #impedancia [Ohms]
 
-Qg = np.array( [[1,Xg],[0, 1]] )
-
-#------ Linha Bluejay (modelo pi) -------
-Z1 = z012_rail[1][1] #impedancia considerando a sequencia positiva
-Y1 = z012_rail[1][1] #admitancia considerando a sequencia negativa
+#------ Linha Rail normal (modelo pi) -------
+Z1 = z012_rail[1][1]/Zbaserail*L #impedancia considerando a sequencia positiva
+Y1 = y012_rail[1][1]*Zbaserail*L #admitancia considerando a sequencia negativa
 
 A1 = 1 + Z1*Y1/2
 A2 = Z1
@@ -266,4 +268,11 @@ A4 = 1 + Z1*Y1/2
 
 QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
 
-
+#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
+Vg = 0.95*500e3 #tensao de entrada na linha
+Vg = Vg/Vbaserail
+print("\n\n- Linha em vazio - RAIL")
+Vr = Vg/A1
+Ig = A3*Vr
+print("Vr = %.2e < %.2f   V =   %.2f pu" % (abs(Vr),np.rad2deg(np.angle(Vr)),abs(Vr)))
+print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))

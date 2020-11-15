@@ -281,10 +281,13 @@ print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 %matplotlib inline
 import matplotlib.pyplot as plt
-at=0
+Vg = 0.95*500e3 #tensao de entrada na linha
+Vg = Vg/Vbaserail
+dim=0
 for l in range(750):
-    Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
-    Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
+    dist=l-dim
+    Z1 = z012_rail[1][1]/Zbaserail*dist #impedancia considerando a sequencia positiva
+    Y1 = y012_rail[1][1]*Zbaserail*dist #admitancia considerando a sequencia negativa
 
     A1 = 1 + Z1*Y1/2
     A2 = Z1
@@ -294,14 +297,16 @@ for l in range(750):
     QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
 
     #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
-    Vg = 0.95*500e3 #tensao de entrada na linha
-    Vg = Vg/Vbaserail
+
     Vr = Vg/A1
     Ig = A3*Vr
     
-    if at==0 and Vr>1.05:
+    if abs(Vr)>1.05:
         print("Distancia para a subestação maxima (km)") 
         print(l)
         at=1
+        Vg=abs(Vr)*0.93
+        dim=l
     
     plt.plot(l, Vr, 'o', color='black');
+

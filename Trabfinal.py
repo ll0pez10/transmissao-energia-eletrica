@@ -281,7 +281,7 @@ print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 %matplotlib inline
 import matplotlib.pyplot as plt
-Vg = 0.95*500e3 #tensao de entrada na linha
+Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 dim=0
 for l in range(750):
@@ -295,7 +295,7 @@ for l in range(750):
     A4 = 1 + Z1*Y1/2
 
     QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
-
+       
     #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
 
     Vr = Vg/A1
@@ -305,8 +305,7 @@ for l in range(750):
         print("Distancia para a subestação maxima (km)") 
         print(l)
         at=1
-        Vg=abs(Vr)*0.93
+        Vg=0.99
         dim=l
     
     plt.plot(l, Vr, 'o', color='black');
-

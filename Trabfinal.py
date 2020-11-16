@@ -220,7 +220,7 @@ QL_b = np.array( [[A1, A2],[A3, A4]] ) #Quadripolo da linha bluejay
 #-------------- Testes --------------------------
 #fator de potencia unitario na carga
 
-Vg = 0.95*750e3 #tensao de entrada na linha
+Vg = 750e3 #tensao de entrada na linha
 Vg = Vg/Vbaseblue
 #Ig = Sg/(np.sqrt(3) * Vg) #corrente no gerador
 #VI_carga = inv(Qg @ QL_b) @ np.array([Vg, Ig])
@@ -269,7 +269,7 @@ A4 = 1 + Z1*Y1/2
 QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
 
 #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
-Vg = 0.95*500e3 #tensao de entrada na linha
+Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 print("\n\n- Linha em vazio - RAIL")
 Vr = Vg/A1

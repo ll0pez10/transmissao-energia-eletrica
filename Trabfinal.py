@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from linha_transmissao import Linha_transmissao
-from metodos_linhas import raio_eq, Pnat
+from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha
 
 from numpy import sqrt
 import numpy as np
@@ -295,6 +295,7 @@ for l in range(750):
     A4 = 1 + Z1*Y1/2
 
     QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
+
        
     #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
 
@@ -318,31 +319,6 @@ Ig = 1 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, pr
 L1 = 244 #km ate a 1 subestação
 L2 = 267 #km ate a 2 subestação
 L3 = 239 #km ate a 3 subestação
-
-#funcoes uteis para achar o quadripolo da linha em função da distancia e em seguida a compensação da linha em função da distancia e da taxa que queremos compensar
-def quadlinha(name,L):
-    if name == "Bluejay":
-        Z1 = z012_bluejay[1][1]/Zbaseblue*L #impedancia considerando a sequencia positiva
-        Y1 = y012_bluejay[1][1]*Zbaseblue*L #admitancia considerando a sequencia negativa
-    elif name == "Rail":
-        Z1 = z012_rail[1][1]/Zbaserail*L #impedancia considerando a sequencia positiva
-        Y1 = y012_rail[1][1]*Zbaserail*L #admitancia considerando a sequencia negativa
-
-    #Componentes da matriz de quadripolo
-    A1 = 1 + Z1*Y1/2
-    A2 = Z1
-    A3 = Y1*(1 + Z1*Y1/4)
-    A4 = 1 + Z1*Y1/2
-
-    return np.array( [[A1, A2],[A3, A4]] ) #Quadripolo da linha bluejay
-
-def compenslinha(name,L,taxa):
-    if name == "Bluejay":
-        Y1 = y012_bluejay[1][1]*Zbaseblue*L
-    elif name == "Rail":
-        Y1 = y012_rail[1][1]*Zbaserail*L
-        
-    return np.array( [[1, 0],[-taxa*Y1, 1]] ) #se pa temos que ajustar esse 50% dps, a verificar de acordo com os resultados
 
 #======================================== Rail ==============================================
 

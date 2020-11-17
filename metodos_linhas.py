@@ -20,6 +20,8 @@ def derivacao(FC, Y, Bc, ltot):
     Ql = [1, 0, Bl, 1]
     return Ql
 
+#teste
+
 #funcoes uteis para achar o quadripolo da linha em função da distancia e em seguida a compensação da linha em função da distancia e da taxa que queremos compensar
 def quadlinha(name,L):
     if name == "Bluejay":

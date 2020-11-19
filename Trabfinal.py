@@ -315,15 +315,46 @@ for l in range(750):
 #============================================= Linha com carga =======================================
 #=====================================================================================================
 Vg = 1 #pu
-Ig = 1 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
+Ig = 1.07 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
+print("Potencia na fonte (GW): " + str(Vg*Ig*3))
 L1 = 244 #km ate a 1 subestação
 L2 = 267 #km ate a 2 subestação
 L3 = 239 #km ate a 3 subestação
 
-#======================================== Rail ==============================================
+def quadparalelo(L,compz,compy):
+    Z1 = z012_bluejay[1][1]/Zbaseblue*L
+    Z1 = complex(Z1.real,Z1.imag*compz)
+    Y1 = y012_bluejay[1][1]*Zbaseblue*L
+    Y1 = complex(Y1.real,Y1.imag*compy)
+    
+    A1 = 1 + Z1*Y1/2
+    B1 = Z1
+    C1 = Y1*(1 + Z1*Y1/4)
+    D1 = 1 + Z1*Y1/2
+    
+    Z1 = z012_rail[1][1]/Zbaserail*L
+    Z1 = complex(Z1.real,Z1.imag*compz)
+    Y1 = y012_rail[1][1]*Zbaserail*L 
+    Y1 = complex(Y1.real,Y1.imag*compy)
 
-
-Quad = quadlinha("Rail",L1)@compenslinha("Rail",L1,0.5)@quadlinha("Rail",L2)@compenslinha("Rail",L2,0.5)@quadlinha("Rail",L3)
+    A2 = 1 + Z1*Y1/2
+    B2 = Z1
+    C2 = Y1*(1 + Z1*Y1/4)
+    D2 = 1 + Z1*Y1/2
+    
+    A = (A1*B2+B1*A2)/(B1+B2)
+    B = B1*B2/(B1+B2)
+    C = C1+C2+((A1-A2)*(D2-D1)/(B1+B2))
+    D = (B1*D2+D1*B2)/(B1+B2)
+    
+    return np.array( [[A, B],[C, D]] )
+#======================================== Duas Redes em paralelo ==============================================
+x1=0.06
+x2=0.3
+Quad = quadparalelo(L1,x1,x2)@quadparalelo(L2,x1,x2)@quadparalelo(L3,x1,x2)
 [Vr,Ir]=np.linalg.solve(Quad,[Vg,Ig])
+print("\nLinhas em paralelo:")
 print(abs(Vr))
 print(abs(Ir))
+print((Vr*Ir).real)
+print("\nPotencia na carga (GW): " + str(((Vr*Ir).real)*3))

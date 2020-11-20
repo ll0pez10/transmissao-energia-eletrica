@@ -225,7 +225,7 @@ Vg = Vg/Vbaseblue
 #Ig = Sg/(np.sqrt(3) * Vg) #corrente no gerador
 #VI_carga = inv(Qg @ QL_b) @ np.array([Vg, Ig])
 
-#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
+#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, a segunda coluna do quadripolo e desconsiderada
 print("- Linha em vazio -BLUEJAY ")
 Vr = Vg/A1
 Ig = A3*Vr
@@ -268,7 +268,7 @@ A4 = 1 + Z1*Y1/2
 
 QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
 
-#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
+#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segunda coluna do quadripolo e desconsiderada
 Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 print("\n\n- Linha em vazio - RAIL")
@@ -279,11 +279,12 @@ print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 #======================================== Grafico da variacao da tensão com a distancia do RAIL ===========================================
 
-%matplotlib inline
-import matplotlib.pyplot as plt
+#%matplotlib inline
 Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 dim=0
+listVr = []
+listL = []
 for l in range(750):
     dist=l-dim
     Z1 = z012_rail[1][1]/Zbaserail*dist #impedancia considerando a sequencia positiva
@@ -303,13 +304,17 @@ for l in range(750):
     Ig = A3*Vr
     
     if abs(Vr)>1.05:
-        print("Distancia para a subestação maxima (km)") 
-        print(l)
+        print("Distancia para a subestação maxima (km): %.1f"%l) 
         at=1
         Vg=0.99
         dim=l
+        
+    listVr.append(Vr)
+    listL.append(l)
     
-    plt.plot(l, Vr, 'o', color='black');
+plt.plot(listL, listVr, '.', color='black');
+plt.grid()
+plt.show()
 
 #=====================================================================================================
 #============================================= Linha com carga =======================================

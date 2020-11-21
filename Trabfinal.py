@@ -287,8 +287,6 @@ print("Ig = %.2e ang( %.2f ) A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 dim=0
-listVr = [] #armazena os valores de Vr para cada iteracao para depois plotar um grafico
-listL = [] #armazena os valores de L para cada iteracao para depois plotar um grafico
 for l in range(750):
     dist=l-dim
     Z1 = z012_rail[1][1]/Zbaserail*dist #impedancia considerando a sequencia positiva
@@ -300,25 +298,65 @@ for l in range(750):
     A4 = 1 + Z1*Y1/2
 
     QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
-
        
     #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
 
     Vr = Vg/A1
     Ig = A3*Vr
     
-    if abs(Vr)>1.05:
-        print("Distancia para a subestação maxima (km): %.1f" % l) 
-        Vg = 0.99
-        dim = l
-        
-    listVr.append(Vr)
-    listL.append(l)
+    
+    plt.plot(l, Vr, 'o', color='black');
 
-#plot
-#plt.plot(listL, listVr, '.', color='black');
-#plt.grid()
-#plt.show()
+plt.xlabel('Distancia (km)')
+plt.ylabel('tensão (PU)')
+plt.title('Linha sem compensação shunt')
+
+comp=np.array( [[1, 0],[0.7, 1]] )
+
+fig2=plt.figure()
+for l in range(750):
+    if l < 244:
+        Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
+        Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
+    
+        A1 = 1 + Z1*Y1/2
+        A2 = Z1
+        A3 = Y1*(1 + Z1*Y1/4)
+        A4 = 1 + Z1*Y1/2
+    
+        Ql_1=comp@np.array( [[A1, A2],[A3, A4]] )@comp
+        A=Ql_1[0,0]
+    elif l<(244+267):
+        Z1 = z012_rail[1][1]/Zbaserail*(l-244) #impedancia considerando a sequencia positiva
+        Y1 = y012_rail[1][1]*Zbaserail*(l-244) #admitancia considerando a sequencia negativa
+    
+        A1 = 1 + Z1*Y1/2
+        A2 = Z1
+        A3 = Y1*(1 + Z1*Y1/4)
+        A4 = 1 + Z1*Y1/2
+    
+        Ql_2=comp@np.array( [[A1, A2],[A3, A4]] )@comp
+        A=Ql_2[0,0]
+    else:
+        
+        Z1 = z012_rail[1][1]/Zbaserail*(l-244-267) #impedancia considerando a sequencia positiva
+        Y1 = y012_rail[1][1]*Zbaserail*(l-244-267) #admitancia considerando a sequencia negativa
+    
+        A1 = 1 + Z1*Y1/2
+        A2 = Z1
+        A3 = Y1*(1 + Z1*Y1/4)
+        A4 = 1 + Z1*Y1/2
+    
+        Ql_3=comp@np.array( [[A1, A2],[A3, A4]] )@comp
+        A=Ql_3[0,0]
+
+    
+    Vr = Vg/A
+    plt.plot(l, Vr, 'o', color='black');
+    plt.xlabel('Distancia (km)')
+    plt.ylabel('tensão (PU)')
+    plt.title('Linha com compensação shunt de 70%')
+
 
 #=====================================================================================================
 #============================================= Linha com carga =======================================
@@ -379,3 +417,4 @@ print("Vr = %.2f" % abs(Vr))
 print("Ir = %.2f" % abs(Ir))
 print("Vr * Ir = %.2f" % (Vr*Ir).real)
 print("\nPotencia na carga: %.2f GW" % ((Vr*Ir).real*3))
+print("\nPerdas na linha: %.2f Porcentos" % (100*(1-((Vr*Ir).real)/(Vg*Ig))))

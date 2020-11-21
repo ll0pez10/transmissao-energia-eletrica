@@ -313,49 +313,45 @@ plt.title('Linha sem compensação shunt')
 
 comp=np.array( [[1, 0],[0.7, 1]] )
 
+
+
 fig2=plt.figure()
-for l in range(750):
+#primeiro a gnt descobre a matriz de quadripolos desse pedaço todo da linha
+l=244
+Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
+Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
+
+A1 = 1 + Z1*Y1/2
+A2 = Z1
+A3 = Y1*(1 + Z1*Y1/4)
+A4 = 1 + Z1*Y1/2
+
+#compensação shunt, pag 240 fuchs    
+k=1#quanto queremos compensar, 1 = tudo. Uentrada/Usaida se nao    
+Y=(k-A1)/A2
+
+for l in range(750):    
     if l < 244:
         Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
         Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
-    
-        A1 = 1 + Z1*Y1/2
-        A2 = Z1
-        A3 = Y1*(1 + Z1*Y1/4)
-        A4 = 1 + Z1*Y1/2
-    
-        Ql_1=comp@np.array( [[A1, A2],[A3, A4]] )@comp
-        A=Ql_1[0,0]
-    elif l<(244+267):
-        Z1 = z012_rail[1][1]/Zbaserail*(l-244) #impedancia considerando a sequencia positiva
-        Y1 = y012_rail[1][1]*Zbaserail*(l-244) #admitancia considerando a sequencia negativa
-    
-        A1 = 1 + Z1*Y1/2
-        A2 = Z1
-        A3 = Y1*(1 + Z1*Y1/4)
-        A4 = 1 + Z1*Y1/2
-    
-        Ql_2=comp@np.array( [[A1, A2],[A3, A4]] )@comp
-        A=Ql_2[0,0]
-    else:
         
-        Z1 = z012_rail[1][1]/Zbaserail*(l-244-267) #impedancia considerando a sequencia positiva
-        Y1 = y012_rail[1][1]*Zbaserail*(l-244-267) #admitancia considerando a sequencia negativa
-    
         A1 = 1 + Z1*Y1/2
         A2 = Z1
         A3 = Y1*(1 + Z1*Y1/4)
         A4 = 1 + Z1*Y1/2
-    
-        Ql_3=comp@np.array( [[A1, A2],[A3, A4]] )@comp
-        A=Ql_3[0,0]
+      
+        #nova matriz de quadripolos originaria da [shunt][quadripolos][shunt]
+        A = A1 +A2*Y
+        B = A2
+        C = A3+A1*Y+A4*Y+A2*Y*Y
+        D = A4 + A2*Y
 
-    
-    Vr = Vg/A
-    plt.plot(l, Vr, 'o', color='black');
-    plt.xlabel('Distancia (km)')
-    plt.ylabel('tensão (PU)')
-    plt.title('Linha com compensação shunt de 70%')
+        
+        Vr = Vg*A
+        plt.plot(l, abs(Vr), 'o', color='black');
+        plt.xlabel('Distancia (km)')
+        plt.ylabel('tensão (PU)')
+        plt.title('Linha com compensação shunt de 100%')
 
 
 #=====================================================================================================

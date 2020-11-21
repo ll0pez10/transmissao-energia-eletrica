@@ -399,6 +399,14 @@ def quadparalelo(L,compz,compy):
     C = C1+C2+((A1-A2)*(D2-D1)/(B1+B2))
     D = (B1*D2+D1*B2)/(B1+B2)
     
+    #Calculando o paralelo do circuito equivalente acima com o outro circuito que sobrou da linha dupla
+    
+    A = (A*B2+B*A2)/(B+B2)
+    B = B*B2/(B+B2)
+    C = C+C2+((A-A2)*(D2-D)/(B+B2))
+    D = (B*D2+D*B2)/(B+B2)
+    
+    
     return np.array( [[A, B],[C, D]] )
 #======================================== Duas Redes em paralelo ==============================================
 x1=0.06 #fator de comopensacao da impedancia

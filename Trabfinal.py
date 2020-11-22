@@ -131,6 +131,9 @@ rpr = CondutoresEspecs["3/8 EHS"][1]
 
 #intanciacao do objeto que representa a linha bluejay
 LinhaBluejay = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
+mat_pot = LinhaBluejay.Mpot()
+cria_arquivo(mat_pot)
+
 Z_bluejay = LinhaBluejay.impedancia()
 Y_bluejay = LinhaBluejay.admitancia()
 Z_bluejay = Z_bluejay.astype(np.csingle)

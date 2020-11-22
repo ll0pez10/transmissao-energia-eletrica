@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from linha_transmissao import Linha_transmissao
-from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha
+from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha, cria_arquivo
 
 from numpy import sqrt
 import numpy as np

@@ -49,5 +49,5 @@ def compenslinha(name,L,taxa):
 
 def cria_arquivo(objeto):
     f = open("m_pot_bluejay.txt ", "w+")
-    f.write(objeto)
+    f.write(str(objeto))
     f.close()

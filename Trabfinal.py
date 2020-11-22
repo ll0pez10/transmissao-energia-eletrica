@@ -228,7 +228,7 @@ Vg = Vg/Vbaseblue
 #Ig = Sg/(np.sqrt(3) * Vg) #corrente no gerador
 #VI_carga = inv(Qg @ QL_b) @ np.array([Vg, Ig])
 
-#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
+#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, a segunda coluna do quadripolo e desconsiderada
 print("- Linha em vazio -BLUEJAY ")
 Vr = Vg/A1
 Ig = A3*Vr
@@ -264,6 +264,7 @@ print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 Z1 = z012_rail[1][1]/Zbaserail*L #impedancia considerando a sequencia positiva
 Y1 = y012_rail[1][1]*Zbaserail*L #admitancia considerando a sequencia negativa
 
+#montagem do quadripolo considerando apenas o modelo pi da linha
 A1 = 1 + Z1*Y1/2
 A2 = Z1
 A3 = Y1*(1 + Z1*Y1/4)
@@ -271,19 +272,21 @@ A4 = 1 + Z1*Y1/2
 
 QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
 
-#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
+#Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segunda coluna do quadripolo e desconsiderada
 Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 print("\n\n- Linha em vazio - RAIL")
 Vr = Vg/A1
 Ig = A3*Vr
-print("Vr = %.2e < %.2f   V =   %.2f pu" % (abs(Vr),np.rad2deg(np.angle(Vr)),abs(Vr)))
-print("Ig = %.2e < %.2f  A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
+print("Vr = %.2e ang( %.2f )   V =   %.2f pu" % (abs(Vr),np.rad2deg(np.angle(Vr)),abs(Vr)))
+print("Ig = %.2e ang( %.2f ) A" % (abs(Ig),np.rad2deg(np.angle(Ig))))
 
 #======================================== Grafico da variacao da tensão com a distancia do RAIL ===========================================
 
-%matplotlib inline
-import matplotlib.pyplot as plt
+#%matplotlib inline
+#O objetivo aqui e ir avancando do ponto inicial da linha ate a outra ponta. Nesse trajeto, quando encontrarmos um ponto em que a tensao
+#ultrapassar 1.05, marcaremos esse ponto para depois colocar uma subestacao. Continuamos as iteracoes, considerando que no ponto que foi
+#marcado a tensao volta ao normal, ate acharmos o proximo ponto que a tensao ultrapassar o limite de 1.05 pu.
 Vg = 500e3 #tensao de entrada na linha
 Vg = Vg/Vbaserail
 dim=0
@@ -298,35 +301,127 @@ for l in range(750):
     A4 = 1 + Z1*Y1/2
 
     QL_r = np.array( [[A1, A2],[A3, A4]] ) #quadripolo da linha rail normal
-
        
     #Caso 1: Vazio sem compensacao -> Corrente na carga e nula, o segundda coluna do quadripolo e desconsiderada
 
     Vr = Vg/A1
     Ig = A3*Vr
     
-    if abs(Vr)>1.05:
-        print("Distancia para a subestação maxima (km)") 
-        print(l)
-        at=1
-        Vg=0.99
-        dim=l
     
     plt.plot(l, Vr, 'o', color='black');
+
+plt.xlabel('Distancia (km)')
+plt.ylabel('tensão (PU)')
+plt.title('Linha sem compensação shunt')
+
+comp=np.array( [[1, 0],[0.7, 1]] )
+
+
+
+fig2=plt.figure()
+#primeiro a gnt descobre a matriz de quadripolos desse pedaço todo da linha
+l=244
+Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
+Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
+
+A1 = 1 + Z1*Y1/2
+A2 = Z1
+A3 = Y1*(1 + Z1*Y1/4)
+A4 = 1 + Z1*Y1/2
+
+#compensação shunt, pag 240 fuchs    
+k=1#quanto queremos compensar, 1 = tudo. Uentrada/Usaida se nao    
+Y=(k-A1)/A2
+
+for l in range(750):    
+    if l < 244:
+        Z1 = z012_rail[1][1]/Zbaserail*l #impedancia considerando a sequencia positiva
+        Y1 = y012_rail[1][1]*Zbaserail*l #admitancia considerando a sequencia negativa
+        
+        A1 = 1 + Z1*Y1/2
+        A2 = Z1
+        A3 = Y1*(1 + Z1*Y1/4)
+        A4 = 1 + Z1*Y1/2
+      
+        #nova matriz de quadripolos originaria da [shunt][quadripolos][shunt]
+        A = A1 +A2*Y
+        B = A2
+        C = A3+A1*Y+A4*Y+A2*Y*Y
+        D = A4 + A2*Y
+
+        
+        Vr = Vg*A
+        plt.plot(l, abs(Vr), 'o', color='black');
+        plt.xlabel('Distancia (km)')
+        plt.ylabel('tensão (PU)')
+        plt.title('Linha com compensação shunt de 100%')
+
 
 #=====================================================================================================
 #============================================= Linha com carga =======================================
 #=====================================================================================================
 Vg = 1 #pu
-Ig = 1 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
+Ig = 1.07 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
+print("Potencia na fonte (GW): " + str(Vg*Ig*3))
 L1 = 244 #km ate a 1 subestação
 L2 = 267 #km ate a 2 subestação
 L3 = 239 #km ate a 3 subestação
 
-#======================================== Rail ==============================================
+def quadparalelo(L,compz,compy):
+#Calcula o quadripolo equivalente dos dois circuitos em paralelo (bluejay e rail)
 
+    Z1 = z012_bluejay[1][1]/Zbaseblue*L
+    Z1 = complex(Z1.real,Z1.imag*compz) #incluindo a compensacao de impedancia
+    Y1 = y012_bluejay[1][1]*Zbaseblue*L
+    Y1 = complex(Y1.real,Y1.imag*compy) #incluindo a compensacao de admitancia
+    
+    #quadripolo bluejay
+    A1 = 1 + Z1*Y1/2
+    B1 = Z1
+    C1 = Y1*(1 + Z1*Y1/4)
+    D1 = 1 + Z1*Y1/2
+    
+    Z1 = z012_rail[1][1]/Zbaserail*L
+    Z1 = complex(Z1.real,Z1.imag*compz) #incluindo a compensacao de impedancia
+    Y1 = y012_rail[1][1]*Zbaserail*L 
+    Y1 = complex(Y1.real,Y1.imag*compy) #incluindo a compensacao de admitancia
 
-Quad = quadlinha("Rail",L1)@compenslinha("Rail",L1,0.5)@quadlinha("Rail",L2)@compenslinha("Rail",L2,0.5)@quadlinha("Rail",L3)
-[Vr,Ir]=np.linalg.solve(Quad,[Vg,Ig])
-print(abs(Vr))
-print(abs(Ir))
+    #quadripolo rail
+    A2 = 1 + Z1*Y1/2
+    B2 = Z1
+    C2 = Y1*(1 + Z1*Y1/4)
+    D2 = 1 + Z1*Y1/2
+    
+    #quadripolo resultado do paralelo entre o bluejay e o rail
+    A = (A1*B2+B1*A2)/(B1+B2)
+    B = B1*B2/(B1+B2)
+    C = C1+C2+((A1-A2)*(D2-D1)/(B1+B2))
+    D = (B1*D2+D1*B2)/(B1+B2)
+    
+    #Calculando o paralelo do circuito equivalente acima com o outro circuito que sobrou da linha dupla
+    
+    A = (A*B2+B*A2)/(B+B2)
+    B = B*B2/(B+B2)
+    C = C+C2+((A-A2)*(D2-D)/(B+B2))
+    D = (B*D2+D*B2)/(B+B2)
+    
+    
+    return np.array( [[A, B],[C, D]] )
+#======================================== Duas Redes em paralelo ==============================================
+x1=0.06 #fator de comopensacao da impedancia
+x2=0.3 #fator de compensacao da admitancia
+
+R = np.array( [ [0,1,0],[0,0,1],[1,0,0] ] ) #matriz de rotacao usada para fazer a transposicao
+
+#Quad = trecho de 244 km @ trecho de 267 km @ trecho de 239 km
+
+Quad = quadparalelo(L1,x1,x2) @ quadparalelo(L2,x1,x2)@ quadparalelo(L3,x1,x2)
+print(Quad)
+
+[Vr,Ir] = np.linalg.solve(Quad,[Vg,Ig])
+print("\n- Linhas em paralelo -")
+print("Vr = %.2f" % abs(Vr))
+print("Ir = %.2f" % abs(Ir))
+print("Vr * Ir = %.2f" % (Vr*Ir).real)
+print("\nPotencia na carga: %.2f GW" % ((Vr*Ir).real*3))
+print("\nPerdas na linha: %.2f Porcentos" % (100*(1-((Vr*Ir).real)/(Vg*Ig))))

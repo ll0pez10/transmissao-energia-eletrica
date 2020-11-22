@@ -2,7 +2,8 @@
 # coding: utf-8
 
 from linha_transmissao import Linha_transmissao
-from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha, cria_arquivo
+from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha
+from numpy import savetxt
 
 from numpy import sqrt
 import numpy as np
@@ -132,7 +133,7 @@ rpr = CondutoresEspecs["3/8 EHS"][1]
 #intanciacao do objeto que representa a linha bluejay
 LinhaBluejay = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
 mat_pot = LinhaBluejay.Mpot()
-cria_arquivo(mat_pot)
+savetxt('mat_pot.csv', mat_pot, delimiter=',')
 
 Z_bluejay = LinhaBluejay.impedancia()
 Y_bluejay = LinhaBluejay.admitancia()

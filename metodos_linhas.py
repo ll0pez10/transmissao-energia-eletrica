@@ -46,8 +46,3 @@ def compenslinha(name,L,taxa):
         Y1 = y012_rail[1][1]*Zbaserail*L
         
     return np.array( [[1, 0],[-taxa*Y1, 1]] ) #se pa temos que ajustar esse 50% dps, a verificar de acordo com os resultados
-
-def cria_arquivo(objeto):
-    f = open("m_pot_bluejay.txt ", "w+")
-    f.write(str(objeto))
-    f.close()

@@ -133,7 +133,11 @@ rpr = CondutoresEspecs["3/8 EHS"][1]
 #intanciacao do objeto que representa a linha bluejay
 LinhaBluejay = Linha_transmissao(r_int, r_ext, nfase, npr, xc, yc, rhoc, rhoc_pr, r_ext, rpr)
 mat_pot = LinhaBluejay.Mpot()
-savetxt('mat_pot.csv', mat_pot, delimiter=',')
+#Retiramos as info do pararaio das matrizes atraves da reducao de kron
+pot_abc_bluejay = 0j + np.zeros((nfase,nfase))
+
+pot_abc_bluejay = mat_pot[0:nfase,0:nfase] - mat_pot[0:nfase,nfase:] @ inv(mat_pot[nfase:,nfase:]) @ mat_pot[nfase:,0:nfase]
+savetxt('mat_pot.csv', pot_abc_bluejay, delimiter=',')
 
 Z_bluejay = LinhaBluejay.impedancia()
 Y_bluejay = LinhaBluejay.admitancia()

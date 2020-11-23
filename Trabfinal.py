@@ -365,7 +365,7 @@ for l in range(750):
 #=====================================================================================================
 #============================================= Linha com carga =======================================
 #=====================================================================================================
-Vg = 1 #pu
+#Vg = 1 #pu
 #Ig = 1.07 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
 #print("Potencia na fonte (GW): " + str(Vg*Ig*3))
 L1 = 244 #km ate a 1 subestação
@@ -426,10 +426,14 @@ print(Quad)
 
 #[Vr,Ir] = np.linalg.solve(Quad,[Vg,Ig])
 Ir=1
-Vr=(Vg-Quad[0,1]*Ir)/Quad[0,0]
-Ig=Quad[1,0]*Vr+Quad[1,1]*Ir
-P0=Vg*(Ig.real)*3
-print("Vg = %.2f" % abs(Vg))
+Vr=1
+#Vr=(Vg-Quad[0,1]*Ir)/Quad[0,0]
+#Ig=Quad[1,0]*Vr+Quad[1,1]*Ir
+[Vg,Ig]=np.linalg.solve(inv(Quad),[Vr,Ir])
+
+
+P0=(Vg.real)*(Ig.real)*3
+print("Vg = "+str(abs(Vg))+" L"+str(np.rad2deg(np.angle(Vg))))
 print("Ig = "+str(abs(Ig))+" L"+str(np.rad2deg(np.angle(Ig))))
 print("\nPotencia na carga: %.2f GW" % (P0))
 
@@ -441,3 +445,5 @@ print("Vr * Ir = %.2f" % (Vr*Ir).real)
 P1=(Vr*Ir).real*3
 print("\nPotencia na carga: %.2f GW" % (P1))
 print("\nPerdas na linha: %.2f Porcentos" % (100*(-P1+P0)/P0))
+
+

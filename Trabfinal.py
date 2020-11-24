@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from linha_transmissao import Linha_transmissao
-from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha
+from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha, quadparalelo
 from numpy import savetxt
 
 from numpy import sqrt
@@ -208,7 +208,7 @@ Zbaserail = Sbase/Vbaserail #ohms
 Xg = 2.4 #impedancia em pu do gerador
 Qg = np.array( [[1,Xg],[0, 1]] ) #quadripolo do gerador
 Xt = 3 #impedancia em pu do transformador
-Qt = np.array( [[1,Xg],[0, 1]] ) #quadripolo do transformador
+Qt = np.array( [[1,Xt],[0, 1]] ) #quadripolo do transformador
 
 #======================================== Bluejay ==============================================
 
@@ -353,7 +353,6 @@ for l in range(750):
         B = A2
         C = A3+A1*Y+A4*Y+A2*Y*Y
         D = A4 + A2*Y
-
         
         Vr = Vg*A
         plt.plot(l, abs(Vr), 'o', color='black');
@@ -367,10 +366,17 @@ for l in range(750):
 #=====================================================================================================
 Vg = 1 #pu
 Ig = 1.07 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
-print("Potencia na fonte (GW): " + str(Vg*Ig*3))
+P0 = 3*(Vg*np.conj(Ig))
+print("A potencia ativa total é : {:.2f} GW \n" .format(P0.real))
 L1 = 244 #km ate a 1 subestação
 L2 = 267 #km ate a 2 subestação
 L3 = 239 #km ate a 3 subestação
+
+#======================================== Duas Redes em paralelo ==============================================
+x1=0.06 #fator de com pensacao da impedancia
+x2=0.3 #fator de compensacao da admitancia
+
+R = np.array( [ [0,1,0],[0,0,1],[1,0,0] ] ) #matriz de rotacao usada para fazer a transposicao
 
 def quadparalelo(L,compz,compy):
 #Calcula o quadripolo equivalente dos dois circuitos em paralelo (bluejay e rail)
@@ -412,11 +418,6 @@ def quadparalelo(L,compz,compy):
     
     
     return np.array( [[A, B],[C, D]] )
-#======================================== Duas Redes em paralelo ==============================================
-x1=0.06 #fator de comopensacao da impedancia
-x2=0.3 #fator de compensacao da admitancia
-
-R = np.array( [ [0,1,0],[0,0,1],[1,0,0] ] ) #matriz de rotacao usada para fazer a transposicao
 
 #Quad = trecho de 244 km @ trecho de 267 km @ trecho de 239 km
 

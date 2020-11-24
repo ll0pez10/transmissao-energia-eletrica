@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from linha_transmissao import Linha_transmissao
-from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha, quadparalelo
+from metodos_linhas import raio_eq, Pnat, derivacao, quadlinha, compenslinha
 from numpy import savetxt
 
 from numpy import sqrt
@@ -367,7 +367,7 @@ for l in range(750):
 Vg = 1 #pu
 Ig = 1.07 #pu para garantirmos assim a potencia na fonte a principio de 3000 MW, provavelmente teremos que aumentar dps devido as perdas na linha
 P0 = 3*(Vg*np.conj(Ig))
-print("A potencia ativa total é : {:.2f} GW \n" .format(P0.real))
+print("A potencia ativa total do gerador é : {:.2f} GW \n" .format(P0.real))
 L1 = 244 #km ate a 1 subestação
 L2 = 267 #km ate a 2 subestação
 L3 = 239 #km ate a 3 subestação
@@ -433,18 +433,15 @@ Vr=1
 [Vg,Ig]=np.linalg.solve(inv(Quad),[Vr,Ir])
 
 
-P0=(Vg.real)*(Ig.real)*3
+P0= (3*(Vg*np.conj(Ig))).real
 print("Vg = "+str(abs(Vg))+" L"+str(np.rad2deg(np.angle(Vg))))
 print("Ig = "+str(abs(Ig))+" L"+str(np.rad2deg(np.angle(Ig))))
 print("\nPotencia na carga: %.2f GW" % (P0))
-
 
 print("\n- Linhas em paralelo -")
 print("Vr = %.2f" % abs(Vr))
 print("Ir = %.2f" % abs(Ir))
 print("Vr * Ir = %.2f" % (Vr*Ir).real)
-P1=(Vr*Ir).real*3
+P1=(3*(Vr*np.conj(Ir))).real
 print("\nPotencia na carga: %.2f GW" % (P1))
 print("\nPerdas na linha: %.2f Porcentos" % (100*(-P1+P0)/P0))
-
-

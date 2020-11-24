@@ -422,12 +422,29 @@ def quadparalelo(L,compz,compy):
 #Quad = trecho de 244 km @ trecho de 267 km @ trecho de 239 km
 
 Quad = quadparalelo(L1,x1,x2) @ quadparalelo(L2,x1,x2)@ quadparalelo(L3,x1,x2)
+print("Matriz de quadripolos")
 print(Quad)
 
-[Vr,Ir] = np.linalg.solve(Quad,[Vg,Ig])
+#[Vr,Ir] = np.linalg.solve(Quad,[Vg,Ig])
+Ir=1
+Vr=1
+#Vr=(Vg-Quad[0,1]*Ir)/Quad[0,0]
+#Ig=Quad[1,0]*Vr+Quad[1,1]*Ir
+[Vg,Ig]=np.linalg.solve(inv(Quad),[Vr,Ir])
+
+
+P0=(Vg.real)*(Ig.real)*3
+print("Vg = "+str(abs(Vg))+" L"+str(np.rad2deg(np.angle(Vg))))
+print("Ig = "+str(abs(Ig))+" L"+str(np.rad2deg(np.angle(Ig))))
+print("\nPotencia na carga: %.2f GW" % (P0))
+
+
 print("\n- Linhas em paralelo -")
 print("Vr = %.2f" % abs(Vr))
 print("Ir = %.2f" % abs(Ir))
 print("Vr * Ir = %.2f" % (Vr*Ir).real)
-print("\nPotencia na carga: %.2f GW" % ((Vr*Ir).real*3))
-print("\nPerdas na linha: %.2f Porcentos" % (100*(1-((Vr*Ir).real)/(Vg*Ig))))
+P1=(Vr*Ir).real*3
+print("\nPotencia na carga: %.2f GW" % (P1))
+print("\nPerdas na linha: %.2f Porcentos" % (100*(-P1+P0)/P0))
+
+
